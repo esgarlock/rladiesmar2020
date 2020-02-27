@@ -1,0 +1,18 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+Scatterplot 
+```{r}
+
+```
+Scatterplot with trendline 
+Scatterplot with ribon 
+Bar and Box plots 
+Violin Plot 
+Density Plots 
+Different types 
+Facets
+Legends 
+Colour plalettes 
+theme 
