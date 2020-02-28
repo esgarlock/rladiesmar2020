@@ -4,15 +4,58 @@ output: html_notebook
 ---
 Scatterplot 
 ```{r}
+library(tidyverse)
+library(here)
+library(ggplot2)
+```
+## Scatter Plots 
+```{r}
+scatter=read.csv(file.choose())%>%dplyr::select(-X)
+head(scatter)
+```
+Basic Scatter Pot 
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point()
 
 ```
-Scatterplot with trendline 
-Scatterplot with ribon 
-Bar and Box plots 
-Violin Plot 
+Scatter plot with trendline 
+```{r}
+ggplot(scatter,aes(x=log(gdpPercap),y=lifeExp))+
+  geom_point()+
+  geom_smooth(method="lm")
+```
+Scatter plot with different aes for the points 
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))
+```
+Categorical Charts 
+
+```{r}
+bar=read.csv(file.choose())
+head(bar)
+```
+```{r}
+ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="dodge",stat="identity")
+```
+```{r}
+ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_boxplot()
+```
+
+```{r}
+ggplot(bar, aes(x=time,y=minutes,fill=year))+
+  geom_violin()
+```
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  facet_grid(~continent)
+```
+
 Density Plots 
 Different types 
-Facets
 Legends 
 Colour plalettes 
 theme 
