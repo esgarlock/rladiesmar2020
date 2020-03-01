@@ -4,58 +4,127 @@ output:
   html_document:
     df_print: paged
 ---
-Libaries that we will use 
+
+This is going to be a basic overview of making your some basic plots in ggplot. We will cover 
+
+* Scatterplots 
+* Bar Plots 
+* Box Plots 
+* Violin Plots 
+* Density Plots 
+   + The aesthetics that go with them 
+   
+You should think of this as a "Best hits of intro to ggplot". I have gone through and collected material that I have found to be the most helpful when learning ggplot. All of these will linked as we go through.If you want any more information on a particular topic, those would be great places to start. 
+
+First step will be to load all the libaries we might need. Make sure these are installed (if you don't know how to install packages look [here](https://www.datacamp.com/community/tutorials/r-packages-guide))
+
+It's always a good idea to load `tidyverse`, that way if you need to clean up any data before plotting you'll be good to go. `here` is a helpful package for loading and saving files. You may not need to use it here. You need to download `ggplot`, I don't think we need to explain why. Now, `patchwork` is very exciting and I will show you exactly what it does later. 
+
+
 ```{r echo = T, message=FALSE}
 library(tidyverse)
 library(here)
 library(ggplot2)
 library(patchwork)
 ```
+## A few notes on ggplot 
+
+* The [ggplot cheatsheet](https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+* ggplot has 
+  + data 
+  + aesthetics
+    + size 
+    + transparency 
+    + colour 
+    + fill
+  + geometries 
+    + `geom_point()`
+    + `geom_bar()`
+    + `geom_boxplot()`
+    + `geom_text()`
+    + `geom_violin()`
+    + any many more 
+
+  
+
+![](layers.png)
+
 
 ## Scatter Plots 
+
+Scatterplots are an excellent first plot to start off with. There are lots of ways to manipulate scatterplots to give very informative figures-which you will see farther down on this page. 
+
+The data and further information on making scatterplots can be found [here](https://www.r-graph-gallery.com/320-the-basis-of-bubble-plot.html). 
+
+First thing first, load the data. What I have written in this chunk may not work for you. You may have to do something along the lines of `scatter=read.csv(file.choose())` and then select the `scatter.csv` from wherever you saved it on your computer. 
+
+
+Its always a good idea to look at the data and make sure it uploaded properly before you start plotting. This also makes sure you know what the column names are. 
 ```{r}
 scatter=read.csv(here("data/scatter.csv"))%>%dplyr::select(-X)
 head(scatter)
 ```
 
-Basic Scatter Pot 
+### Basic Scatter Pot 
 ```{r}
 ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   geom_point()
 
 ```
 
-Scatter plot with trendline 
+### Scatter plot with trendline 
 ```{r}
 ggplot(scatter,aes(x=log(gdpPercap),y=lifeExp))+
   geom_point()+
   geom_smooth(method="lm")
 ```
 
-Scatter plot with different aes for the points 
+### Scatter plot with different aes for the points 
 ```{r}
 ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   geom_point(aes(colour=continent,size=pop))
 ```
 
 ## Bar Charts and Violin Plots
+
+What I have written in this chunk may not work for you. You may have to do something along the lines of `bar=read.csv(file.choose())` and then select the `bar_plot.csv` from wherever you saved it on your computer. 
+
+### Bar Chart 
 ```{r}
 bar=read.csv(here("data/bar_plot.csv"))
 head(bar)
 ```
+
+### Grouped Bar Chart 
 ```{r}
 ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="dodge",stat="identity")
 ```
+
+### Stacked Bar Chart 
+```{r}
+ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="stack",stat="identity")
+```
+
+### Percent Bar Chart 
+```{r}
+ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="fill",stat="identity")
+```
+
+
+### Box and Whisker Plot 
 ```{r}
 ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_boxplot()
 ```
 
+### Violin Plot 
 ```{r}
 ggplot(bar, aes(x=time,y=minutes,fill=year))+
   geom_violin()
 ```
 
 ## Density Plots
+
+What I have written in this chunk may not work for you. You may have to do something along the lines of `density=read.csv(file.choose())` and then select the `density.csv` from wherever you saved it on your computer.
 ```{r}
 density=read.csv(here("data/denisty.csv"))
 head(density)
@@ -216,6 +285,14 @@ ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   facet_grid(~continent)
 ```
 
+### Changing Factor Levels
+```{r}
+bar_ofl=ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="dodge",stat="identity")
+bar$time <- factor(bar$time,levels = c("week2","midterm","final"))
+bar_rfl=ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="dodge",stat="identity")
+(bar_ofl|bar_rfl)
+```
+
 
 ```{r eval=FALSE}
 merged_plot <- ggplot(merged_data_na,aes(x=Enzyme_isoform,y= reorder(Name, -(Diameter)),size= isoform_count,shape=ome, colour= taxa))
@@ -239,5 +316,11 @@ merged_plot <- ggplot(merged_data_na,aes(x=Enzyme_isoform,y= reorder(Name, -(Dia
   facet_grid(~Enzyme_parent_ASA, scales = "free", space = "free")
 ```
 
+## Trouble shooting 
+
+* check the order of your layers 
+* check the class of the columns you are trying to use using `class()`
+* check the factor levels with `levels()`
+* to check how many of each category you have use `table(df$col)`
 
 
