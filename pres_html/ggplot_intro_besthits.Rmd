@@ -1,39 +1,46 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Intro To ggplot: Rladies Vancouver"
+output:
+  html_document:
+    df_print: paged
 ---
-Scatterplot 
-```{r}
+Libaries that we will use 
+```{r echo = T, message=FALSE}
 library(tidyverse)
 library(here)
 library(ggplot2)
+library(patchwork)
 ```
+
 ## Scatter Plots 
 ```{r}
-scatter=read.csv(file.choose())%>%dplyr::select(-X)
+scatter=read.csv(here("data/scatter.csv"))%>%dplyr::select(-X)
 head(scatter)
 ```
+
 Basic Scatter Pot 
 ```{r}
 ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   geom_point()
 
 ```
+
 Scatter plot with trendline 
 ```{r}
 ggplot(scatter,aes(x=log(gdpPercap),y=lifeExp))+
   geom_point()+
   geom_smooth(method="lm")
 ```
+
 Scatter plot with different aes for the points 
 ```{r}
 ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   geom_point(aes(colour=continent,size=pop))
 ```
-Categorical Charts 
 
+## Bar Charts and Violin Plots
 ```{r}
-bar=read.csv(file.choose())
+bar=read.csv(here("data/bar_plot.csv"))
 head(bar)
 ```
 ```{r}
@@ -48,14 +55,189 @@ ggplot(bar, aes(x=time,y=minutes,fill=year))+
   geom_violin()
 ```
 
+## Density Plots
+```{r}
+density=read.csv(here("data/denisty.csv"))
+head(density)
+```
+```{r}
+ggplot(density, aes(x=weight,fill=sex)) + 
+  geom_density()
+```
+
+```{r}
+ggplot(density, aes(x=weight,fill=sex)) + 
+  geom_density(alpha=0.5)
+```
+
+
+## Customizing your Plots
 ```{r}
 ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")
+```
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  theme_bw()
+```
+```{r}
+scatter_bw=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  ggtitle(("theme_bw"))+
+  theme_bw()+
+  theme(legend.position = "none")
+scatter_light=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  ggtitle("theme_classic")+
+  theme_classic()+
+  theme(legend.position = "none")
+scatter_dark=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  ggtitle("theme_dark")+
+  theme_dark()+
+  theme(legend.position = "none")
+scatter_minimal=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  ggtitle("theme_minimal")+
+  theme_minimal()+
+  theme(legend.position = "none")
+
+
+```
+
+Patchwork 
+```{r}
+(scatter_bw|scatter_light)/(scatter_dark|scatter_minimal)
+```
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  theme_bw()+
+  theme(panel.grid = element_blank())
+```
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_viridis_d()+
+  ggtitle("Scatterplot with Viridis Colouring")+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_brewer(palette = "Paired")+
+  ggtitle("Scatterplot with Colour Brewer")+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+
+If you're going to get into manual colouring look [here](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf)
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_manual(values=c("orangered3","slateblue","lightseagreen","orchid3","sienna2"))+
+  ggtitle("Scatterplot with Manual Colours")+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_viridis_d()+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())+
   facet_grid(~continent)
 ```
 
-Density Plots 
-Different types 
-Legends 
-Colour plalettes 
-theme 
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_viridis_d()+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.text.x = element_text(angle=45,vjust=0.5))+
+  facet_grid(~continent)
+```
+
+
+```{r eval=FALSE}
+merged_plot <- ggplot(merged_data_na,aes(x=Enzyme_isoform,y= reorder(Name, -(Diameter)),size= isoform_count,shape=ome, colour= taxa))
+  geom_point()+
+  xlab("Gene Family")+
+  ylab("Taxon")+
+  scale_x_discrete(position ="top")+
+  scale_radius(range=c(2,13),breaks=c(2,4,6,8,10,12,15,20))+
+  scale_shape_manual(values = c(16, 18),"Data Type")+
+  scale_color_manual(values = cols)+
+  guides(size=guide_legend(title="Isoform Count"),
+         shape=guide_legend(override.aes = list(size=3)), 
+         colour=guide_legend(override.aes = list(size=3),(title = "Taxa")))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text.y=element_text(face="italic",size=12),
+        axis.text.x=element_text(size=12,angle=90),
+        axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold"))+
+  facet_grid(~Enzyme_parent_ASA, scales = "free", space = "free")
+```
+
+
+
