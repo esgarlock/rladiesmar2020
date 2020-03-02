@@ -1,5 +1,5 @@
 ---
-title: "Intro To ggplot: Rladies Vancouver"
+title: "Intro fo ggplot: Rladies Vancouver"
 output:
   html_document:
     df_print: paged
@@ -48,7 +48,20 @@ library(patchwork)
   
 
 ![](layers.png)
-
+## Basic Anatomy of a ggplot
+```{r eval=FALSE}
+p=ggplot(aes(aes1,aes2))+ #these are global aesthetics that will apply to all the points (required)
+    geom_X(aes(aes1,aes2))+ #X=point|bar|violin|etc, you can have many `geom`s in one plot (required)
+    theme() # a lot of your specifications will go here (not required)
+  
+p #this is how you get your plot to show up 
+```
+You could also just get the plot to show up automatically if you don't set it to an object 
+```{r eval=FALSE}
+ggplot(aes(aes1,aes2))+ 
+    geom_X(aes(aes1,aes2))+ 
+    theme()
+```
 
 ## Scatter Plots 
 
@@ -66,6 +79,7 @@ head(scatter)
 ```
 
 ### Basic Scatter Pot 
+
 ```{r}
 ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   geom_point()
@@ -73,6 +87,11 @@ ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
 ```
 
 ### Scatter plot with trendline 
+
+Sometimes you want to add a trendline. Since this dataset is  not going to give a nice linear trendline as is we are tweaking it a bit by taking the log of the gdpPercap. This is very easy and is just done by adding the log() around our X variable. 
+
+for more information on how to get a line of best fit see the documentation for [`geom_smooth`](https://ggplot2.tidyverse.org/reference/geom_smooth.html)
+
 ```{r}
 ggplot(scatter,aes(x=log(gdpPercap),y=lifeExp))+
   geom_point()+
@@ -80,51 +99,136 @@ ggplot(scatter,aes(x=log(gdpPercap),y=lifeExp))+
 ```
 
 ### Scatter plot with different aes for the points 
+
+When you have a lot of nice metadata associated with the variables you are plotting. It is nice to incorporate these into your figures. 
+You can normally change 
+
+* Shape 
+* Colour 
+* Fill 
+* Alpha 
+* Size 
+
+Note: We have taken the log() away from the X value. 
+
+Let's change the colour of the points based on `contient` and scale the points based on `pop`
 ```{r}
 ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   geom_point(aes(colour=continent,size=pop))
+```
+
+Lets change the shape of the points 
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(shape=continent,size=pop))
+```
+
+You can see we get a lot of strange shapes. You can specify the shapes you want by using a number code. You can find all those [here](https://www.datanovia.com/en/blog/ggplot-point-shapes-best-tips/)
+
+
+
+
+Whats the difference between fill and colour? Also why are there different versions of the same shape? 
+
+```{r echo=FALSE}
+shape_21=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop),shape=21)+
+  ggtitle("colour with shape 21")+
+  theme(legend.position = "none")
+shape_16=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop),shape=16)+
+  ggtitle("colour with shape 16")+
+  theme(legend.position = "none")
+shapef_21=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(fill=continent,size=pop),shape=21)+
+  ggtitle("fill with shape 21")+
+  theme(legend.position = "none")
+shapef_16=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(fill=continent,size=pop),shape=16)+
+  ggtitle("fill with shape 16")+
+  theme(legend.position = "none")
+
+(shape_16|shape_21)/(shapef_16|shapef_21)
 ```
 
 ## Bar Charts and Violin Plots
 
 What I have written in this chunk may not work for you. You may have to do something along the lines of `bar=read.csv(file.choose())` and then select the `bar_plot.csv` from wherever you saved it on your computer. 
 
+The dataset we will be using is looking at how much sleep students in different years of school get (in minutes) at different times in the year. 
+
 ### Bar Chart 
+
+More information on making bar charts can be found [here](http://www.sthda.com/english/wiki/ggplot2-barplots-quick-start-guide-r-software-and-data-visualization)
+
+
 ```{r}
 bar=read.csv(here("data/bar_plot.csv"))
 head(bar)
 ```
 
+There are a lot of ways you can display a bar chart. It's very easy to switch between them. 
+
+All of these will have `stat="summary"` and `fun.y="mean"` in the `geom_bar()`, this is how we can make sure we are plotting the means of each category. 
+
 ### Grouped Bar Chart 
 ```{r}
-ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="dodge",stat="identity")
+ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="dodge",stat = "summary", fun.y = "mean")
 ```
 
 ### Stacked Bar Chart 
+
+Changing the position will allow us to have different types of bar charts. To get it stacked, use `position="stack"`.
+
 ```{r}
-ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="stack",stat="identity")
+ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="stack",stat = "summary", fun.y = "mean")
 ```
 
 ### Percent Bar Chart 
+
 ```{r}
-ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="fill",stat="identity")
+ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="fill",stat = "summary", fun.y = "mean")
 ```
 
+To summarize: 
+grouped bar chart: `position="dodge"`
+stacked bar chart: `position="stack"`
+percent bar chart: `position="fill"`
 
 ### Box and Whisker Plot 
+
+Box and Whisket plots are considered an improvement over the barplot because they give a better idea of the spread of the data. You can see the mean, quartiles and outliers, these are not evident with the bar plot. 
+
+More information on making box and whisker plots can be found [here](http://www.sthda.com/english/wiki/ggplot2-box-plot-quick-start-guide-r-software-and-data-visualization)
+
 ```{r}
 ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_boxplot()
 ```
 
 ### Violin Plot 
+
+Violin plots are sometimes considered anoter level up from the box and whisker (so to keep track bar<box<violin) since it gives a better (more visual) idea of how the points are distributed. 
+
+More information on violin plots can be found [here](http://www.sthda.com/english/wiki/ggplot2-violin-plot-quick-start-guide-r-software-and-data-visualization)
+
+
 ```{r}
 ggplot(bar, aes(x=time,y=minutes,fill=year))+
   geom_violin()
 ```
 
+You may have noticed that for all of these, the axis are in the order final, midterm, week2. While not a big deal, it would be nice if they were week2, midterm, final. We are going to get into how to change that later. For now, we will stick to the basic plots. 
+
+
 ## Density Plots
 
 What I have written in this chunk may not work for you. You may have to do something along the lines of `density=read.csv(file.choose())` and then select the `density.csv` from wherever you saved it on your computer.
+
+More information on density plots can be found [here](https://plot.ly/ggplot2/geom_density/)
+
+This is a randomly generated dataset for the weights of males vs. females. 
+
 ```{r}
 density=read.csv(here("data/denisty.csv"))
 head(density)
@@ -133,6 +237,8 @@ head(density)
 ggplot(density, aes(x=weight,fill=sex)) + 
   geom_density()
 ```
+
+There is a large chunk of this figure that is overlapping. If we want to be able to see what is going on, we can change the alpha (or opaque the figures are)
 
 ```{r}
 ggplot(density, aes(x=weight,fill=sex)) + 
@@ -294,15 +400,16 @@ bar_rfl=ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="dodge",s
 ```
 
 
-```{r eval=FALSE}
-merged_plot <- ggplot(merged_data_na,aes(x=Enzyme_isoform,y= reorder(Name, -(Diameter)),size= isoform_count,shape=ome, colour= taxa))
+
+```{r echo=FALSE}
+merged_data_na=read.csv(here("data/my_example.csv"))
+merged_plot <- ggplot(merged_data_na,aes(x=Enzyme_Isoform,y=(Diameter),size= isoform_count,shape=ome, colour= taxa))+
   geom_point()+
   xlab("Gene Family")+
-  ylab("Taxon")+
+  ylab("Diameter")+
   scale_x_discrete(position ="top")+
-  scale_radius(range=c(2,13),breaks=c(2,4,6,8,10,12,15,20))+
   scale_shape_manual(values = c(16, 18),"Data Type")+
-  scale_color_manual(values = cols)+
+  scale_color_brewer(palette = "Paired")+
   guides(size=guide_legend(title="Isoform Count"),
          shape=guide_legend(override.aes = list(size=3)), 
          colour=guide_legend(override.aes = list(size=3),(title = "Taxa")))+
@@ -314,6 +421,24 @@ merged_plot <- ggplot(merged_data_na,aes(x=Enzyme_isoform,y= reorder(Name, -(Dia
         axis.text=element_text(size=12),
         axis.title=element_text(size=14,face="bold"))+
   facet_grid(~Enzyme_parent_ASA, scales = "free", space = "free")
+merged_plot
+```
+```{r echo = FALSE, message=FALSE}
+library(igraph)
+library(ggnetwork)
+network_df=read.csv(here("data/net.csv"))
+```
+
+```{r}
+ggplot(network_df,aes(x = x, y = y, xend = xend, yend = yend))+
+  geom_edges(arrow = arrow(length = unit(6, "pt")))+
+  geom_nodes(aes(colour=status),size=8)+
+  geom_text(aes(label=name), check_overlap = TRUE)+
+  scale_color_brewer(palette = "Accent")+
+  ggtitle("Disease Transmission")+
+  theme_blank()
+  
+
 ```
 
 ## Trouble shooting 
