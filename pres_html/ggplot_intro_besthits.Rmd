@@ -1,7 +1,7 @@
 ---
 title: "Intro to ggplot: Rladies Vancouver"
 output:
-  html_notebook:
+  html_document: 
     df_print: paged
 ---
 
@@ -299,8 +299,6 @@ scatter_minimal=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   ggtitle("theme_minimal")+
   theme_minimal()+
   theme(legend.position = "none")
-
-
 ```
 
 ### Patchwork 
