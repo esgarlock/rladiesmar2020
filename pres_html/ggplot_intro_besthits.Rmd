@@ -1,5 +1,5 @@
 ---
-title: "Intro fo ggplot: Rladies Vancouver"
+title: "Intro to ggplot: Rladies Vancouver"
 output:
   html_document:
     df_print: paged
@@ -48,6 +48,7 @@ library(patchwork)
   
 
 ![](layers.png)
+
 ## Basic Anatomy of a ggplot
 ```{r eval=FALSE}
 p=ggplot(aes(aes1,aes2))+ #these are global aesthetics that will apply to all the points (required)
@@ -192,9 +193,10 @@ ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="fill",stat = "su
 ```
 
 To summarize: 
-grouped bar chart: `position="dodge"`
-stacked bar chart: `position="stack"`
-percent bar chart: `position="fill"`
+
+* grouped bar chart: `position="dodge"`
+* stacked bar chart: `position="stack"`
+* percent bar chart: `position="fill"`
 
 ### Box and Whisker Plot 
 
@@ -247,12 +249,19 @@ ggplot(density, aes(x=weight,fill=sex)) +
 
 
 ## Customizing your Plots
+
+This is the same plot we made above, we haven't added any customizations. 
 ```{r}
 ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   geom_point(aes(colour=continent,size=pop))+
   xlab(" GDP Per Capita")+
   ylab("Life Expectancy")
 ```
+
+### Themes 
+
+There are a lot of different themes you can use when making your plots. You can see a description of them all [here](https://ggplot2.tidyverse.org/reference/ggtheme.html), and I'll show you some examples below.
+
 ```{r}
 ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   geom_point(aes(colour=continent,size=pop))+
@@ -260,7 +269,8 @@ ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   ylab("Life Expectancy")+
   theme_bw()
 ```
-```{r}
+
+```{r }
 scatter_bw=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   geom_point(aes(colour=continent,size=pop))+
   xlab(" GDP Per Capita")+
@@ -293,7 +303,10 @@ scatter_minimal=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
 
 ```
 
-Patchwork 
+### Patchwork 
+
+`Patchwork` is a lovely package that allows you to very simply arrange your plots in whatever manner you like. See the documentation [here](https://github.com/thomasp85/patchwork). You can see an example of how you would use it below. 
+
 ```{r}
 (scatter_bw|scatter_light)/(scatter_dark|scatter_minimal)
 ```
@@ -302,6 +315,7 @@ ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   geom_point(aes(colour=continent,size=pop))+
   xlab(" GDP Per Capita")+
   ylab("Life Expectancy")+
+  ggtitle("Removing All Gridlines")+
   theme_bw()+
   theme(panel.grid = element_blank())
 ```
@@ -310,20 +324,32 @@ ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   geom_point(aes(colour=continent,size=pop))+
   xlab(" GDP Per Capita")+
   ylab("Life Expectancy")+
+  ggtitle("Removing All Vertical Lines")+
   theme_bw()+
   theme(panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank())
 ```
+### Modifying the legend 
+
+There are a lot of ways you can change the legend. You will probably need to do some research for your specific use case. There are options in `theme()` and options in `guide()` and a lot of others. 
+
+[This](http://www.cookbook-r.com/Graphs/Legends_(ggplot2)/) is normally where I go when I first start troubleshooting my legend problems. 
+
 ```{r}
 ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   geom_point(aes(colour=continent,size=pop))+
   xlab(" GDP Per Capita")+
   ylab("Life Expectancy")+
+  ggtitle("Renaming the Legends")+
   guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
   theme_bw()+
   theme(panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank())
 ```
+
+### Colouring 
+
+Everybody's favourite part of plotting. There is A LOT of different ways you can colour your plots. So I advise you explore this when the time comes, but there are a lot of pre-set colour schemes that look great and are easy to implement. You can find resources on them [here](http://www.sthda.com/english/wiki/ggplot2-colors-how-to-change-colors-automatically-and-manually)
 
 ```{r}
 ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
@@ -350,7 +376,7 @@ ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
         panel.grid.minor.x = element_blank())
 ```
 
-If you're going to get into manual colouring look [here](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf)
+If you're going to get into manual colouring look [here](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf) to figure out what kind of colours are available. 
 ```{r}
 ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   geom_point(aes(colour=continent,size=pop))+
@@ -364,6 +390,25 @@ ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
         panel.grid.minor.x = element_blank())
 ```
 
+If you are hoping to apply a specific colour to a specific category you can do it like this. 
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_manual(values=c("Americas"="orangered3","Asia"="slateblue","Africa"="lightseagreen","Europe"="orchid3","Oceania"="sienna2"))+
+  ggtitle("Scatterplot with Manual Colours-Assigned to Continent")+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+
+### Facets 
+
+Sometimes when you have a lot of data it can be useful to facet your plots. This is really easy! As you can see below. The different options for facets can be seen [here](https://www.datacamp.com/community/tutorials/facets-ggplot-r)
+
 ```{r}
 ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
   geom_point(aes(colour=continent,size=pop))+
@@ -376,6 +421,8 @@ ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
         panel.grid.minor.x = element_blank())+
   facet_grid(~continent)
 ```
+
+You can see that the facet made our x-axis labels difficult to see. Luckily this is one of the many elements we can fix in `theme()`
 
 ```{r}
 ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
@@ -392,6 +439,9 @@ ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
 ```
 
 ### Changing Factor Levels
+
+Remember up above we saw that the categories for the sleep dataset weren't in the right order. We are going to reset the [factor levels](http://www.cookbook-r.com/Manipulating_data/Changing_the_order_of_levels_of_a_factor/) and then it should plot properly. 
+
 ```{r}
 bar_ofl=ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="dodge",stat="identity")
 bar$time <- factor(bar$time,levels = c("week2","midterm","final"))
@@ -399,9 +449,16 @@ bar_rfl=ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="dodge",s
 (bar_ofl|bar_rfl)
 ```
 
+## Away from the Basics 
+
+We went through some very basics code today. But one of the things that makes ggplot so popular is how customizable it is. The following are 2 examples of plots that I have been using a lot in my research and work that may look very complicated but are really only building on the very basic structures we have gone over today. 
+
+### Phytoplankton Gene Isoform Counts Based on Cell Diameter and Taxa 
+
+This was done with Katherine Fleury for her undergraduate honours project at Mount Allison University. 
 
 
-```{r echo=FALSE}
+```{r}
 merged_data_na=read.csv(here("data/my_example.csv"))
 merged_plot <- ggplot(merged_data_na,aes(x=Enzyme_Isoform,y=(Diameter),size= isoform_count,shape=ome, colour= taxa))+
   geom_point()+
@@ -428,6 +485,12 @@ library(igraph)
 library(ggnetwork)
 network_df=read.csv(here("data/net.csv"))
 ```
+
+
+### Network plot 
+
+You need a few other packages in order to get the data ready for this. You can see it in the Rmd version of this html (you can find it in the ReadMe). 
+
 
 ```{r}
 ggplot(network_df,aes(x = x, y = y, xend = xend, yend = yend))+
