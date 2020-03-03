@@ -1,7 +1,7 @@
 ---
 title: "Intro to ggplot: Rladies Vancouver"
 output:
-  html_document:
+  html_notebook:
     df_print: paged
 ---
 
