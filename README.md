@@ -1,9 +1,13 @@
 # Intro to ggplot with RLadies Vancouver 
 ## Presented by: Emma Garlock 
+
+![](pres_html/event_header.jpg)
+
+
 ### twitter: [@emmagarlock](https://twitter.com/emmagarlock) 
 ### email: egarlock@sfu.ca
 
-![]
+
 
 Hello! Here you will find the resources for my intro to ggplot workshop with the RLadies Vancouver. 
 Before you arrive at the workshop, please make sure you have downloaded R. It will also be helpful if you have these packages already installed. Only `ggplot` is 100% required, but the others are nice to have. 
