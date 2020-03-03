@@ -26,3 +26,9 @@ All these materials are in R notebook format, if you are not familiar with this 
 * [Density plot data](https://github.com/esgarlock/rladiesmar2020/blob/master/data/denisty.csv)
 * [Emma's example 1](https://github.com/esgarlock/rladiesmar2020/blob/master/data/my_example.csv)
 * [Emma's example 2](https://github.com/esgarlock/rladiesmar2020/blob/master/data/net.csv)
+
+
+## Other Resources 
+* [The R Graph Gallery](https://www.r-graph-gallery.com/)
+* [Top 50 ggplot2 Visualizations](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
+* [One dataset visualized 25 ways](https://flowingdata.com/2017/01/24/one-dataset-visualized-25-ways/)
