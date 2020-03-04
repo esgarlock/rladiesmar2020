@@ -1,12 +1,16 @@
 # Intro to ggplot with RLadies Vancouver 
 ## Presented by: Emma Garlock 
+
+![](pres_html/event_header.jpg)
+
+
 ### twitter: [@emmagarlock](https://twitter.com/emmagarlock) 
 ### email: egarlock@sfu.ca
 
-![]
+
 
 Hello! Here you will find the resources for my intro to ggplot workshop with the RLadies Vancouver. 
-Before you arrive at the workshop, please make sure you have downloaded R. It will also be helpful if you have these packages already installed. Only `ggplot` is 100% required, but the others are nice to have. 
+Before you arrive at the workshop, please make sure you have downloaded R. It will also be helpful if you have these packages already installed. Only `ggplot` is 100% required, but the others are nice to have if you feel like following along with the more complex examples I have at the end :). 
   * `ggplot` 
   * `tidyverse` 
   * `here` 
@@ -22,3 +26,9 @@ All these materials are in R notebook format, if you are not familiar with this 
 * [Density plot data](https://github.com/esgarlock/rladiesmar2020/blob/master/data/denisty.csv)
 * [Emma's example 1](https://github.com/esgarlock/rladiesmar2020/blob/master/data/my_example.csv)
 * [Emma's example 2](https://github.com/esgarlock/rladiesmar2020/blob/master/data/net.csv)
+
+
+## Other Resources 
+* [The R Graph Gallery](https://www.r-graph-gallery.com/)
+* [Top 50 ggplot2 Visualizations](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
+* [One dataset visualized 25 ways](https://flowingdata.com/2017/01/24/one-dataset-visualized-25-ways/)
