@@ -10,7 +10,7 @@
 
 
 Hello! Here you will find the resources for my intro to ggplot workshop with the RLadies Vancouver. 
-Before you arrive at the workshop, please make sure you have downloaded R. It will also be helpful if you have these packages already installed. Only `ggplot` is 100% required, but the others are nice to have. 
+Before you arrive at the workshop, please make sure you have downloaded R. It will also be helpful if you have these packages already installed. Only `ggplot` is 100% required, but the others are nice to have if you feel like following along with the more complex examples I have at the end :). 
   * `ggplot` 
   * `tidyverse` 
   * `here` 
