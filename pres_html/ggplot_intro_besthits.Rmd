@@ -1,8 +1,6 @@
 ---
 title: "Intro to ggplot: Rladies Vancouver"
-output:
-  html_document: 
-    df_print: paged
+output: html_document
 ---
 
 This is going to be a basic overview of making your some basic plots in ggplot. We will cover 
