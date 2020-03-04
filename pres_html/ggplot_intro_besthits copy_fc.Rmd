@@ -1,0 +1,688 @@
+---
+title: "Intro to ggplot: Rladies Vancouver"
+output: 
+  html_notebook
+---
+*This has both the fill in blank and completed scripts which can be used for the presentation* 
+
+This is going to be a basic overview of making your some basic plots in ggplot. We will cover 
+
+* Scatterplots 
+* Bar Plots 
+* Box Plots 
+* Violin Plots 
+* Density Plots 
+   + The aesthetics that go with them 
+   
+You should think of this as a "Best hits of intro to ggplot". I have gone through and collected material that I have found to be the most helpful when learning ggplot. All of these will linked as we go through.If you want any more information on a particular topic, those would be great places to start. 
+
+First step will be to load all the libaries we might need. Make sure these are installed (if you don't know how to install packages look [here](https://www.datacamp.com/community/tutorials/r-packages-guide))
+
+It's always a good idea to load `tidyverse`, that way if you need to clean up any data before plotting you'll be good to go. `here` is a helpful package for loading and saving files. You may not need to use it here. You need to download `ggplot`, I don't think we need to explain why. Now, `patchwork` is very exciting and I will show you exactly what it does later. 
+
+
+```{r echo = T, message=FALSE}
+library(tidyverse)
+library(here)
+library(ggplot2)
+library(patchwork)
+```
+## A few notes on ggplot 
+
+* The [ggplot cheatsheet](https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+* ggplot has 
+  + data 
+  + aesthetics
+    + size 
+    + transparency 
+    + colour 
+    + fill
+  + geometries 
+    + `geom_point()`
+    + `geom_bar()`
+    + `geom_boxplot()`
+    + `geom_text()`
+    + `geom_violin()`
+    + any many more 
+
+  
+
+![](layers.png)
+
+## Basic Anatomy of a ggplot
+```{r eval=FALSE}
+p=ggplot(aes(aes1,aes2))+ #these are global aesthetics that will apply to all the points (required)
+    geom_X(aes(aes1,aes2))+ #X=point|bar|violin|etc, you can have many `geom`s in one plot (required)
+    theme() # a lot of your specifications will go here (not required)
+  
+p #this is how you get your plot to show up 
+```
+You could also just get the plot to show up automatically if you don't set it to an object 
+```{r eval=FALSE}
+ggplot(aes(aes1,aes2))+ 
+    geom_X(aes(aes1,aes2))+ 
+    theme()
+```
+
+## Scatter Plots 
+
+Scatterplots are an excellent first plot to start off with. There are lots of ways to manipulate scatterplots to give very informative figures-which you will see farther down on this page. 
+
+The data and further information on making scatterplots can be found [here](https://www.r-graph-gallery.com/320-the-basis-of-bubble-plot.html). 
+
+First thing first, load the data. What I have written in this chunk may not work for you. You may have to do something along the lines of `scatter=read.csv(file.choose())` and then select the `scatter.csv` from wherever you saved it on your computer. 
+
+
+Its always a good idea to look at the data and make sure it uploaded properly before you start plotting. This also makes sure you know what the column names are. 
+```{r}
+scatter=read.csv(here("data/scatter.csv"))%>%dplyr::select(-X)
+head(scatter)
+```
+
+### Basic Scatter Pot 
+
+```{r eval=FALSE}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_()
+
+```
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point()
+
+```
+
+### Scatter plot with trendline 
+
+Sometimes you want to add a trendline. Since this dataset is  not going to give a nice linear trendline as is we are tweaking it a bit by taking the log of the gdpPercap. This is very easy and is just done by adding the log() around our X variable. 
+
+for more information on how to get a line of best fit see the documentation for [`geom_smooth`](https://ggplot2.tidyverse.org/reference/geom_smooth.html)
+
+```{r eval=FALSE}
+ggplot(scatter,aes(x=,y=lifeExp))+
+  geom_point()+
+  geom_(="lm")
+```
+
+```{r}
+ggplot(scatter,aes(x=log(gdpPercap),y=lifeExp))+
+  geom_point()+
+  geom_smooth(method="lm")
+```
+
+### Scatter plot with different aes for the points 
+
+When you have a lot of nice metadata associated with the variables you are plotting. It is nice to incorporate these into your figures. 
+You can normally change 
+
+* Shape 
+* Colour 
+* Fill 
+* Alpha 
+* Size 
+
+Note: We have taken the log() away from the X value. 
+
+Let's change the colour of the points based on `contient` and scale the points based on `pop`
+
+```{r eval=FALSE}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes())
+```
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))
+```
+
+Lets change the shape of the points 
+
+```{r eval=FALSE}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(size=pop))
+```
+
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(shape=continent,size=pop))
+```
+
+You can see we get a lot of strange shapes. You can specify the shapes you want by using a number code. You can find all those [here](https://www.datanovia.com/en/blog/ggplot-point-shapes-best-tips/)
+
+
+
+
+Whats the difference between fill and colour? Also why are there different versions of the same shape? 
+
+```{r echo=FALSE}
+shape_21=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop),shape=21)+
+  ggtitle("colour with shape 21")+
+  theme(legend.position = "none")
+shape_16=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop),shape=16)+
+  ggtitle("colour with shape 16")+
+  theme(legend.position = "none")
+shapef_21=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(fill=continent,size=pop),shape=21)+
+  ggtitle("fill with shape 21")+
+  theme(legend.position = "none")
+shapef_16=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(fill=continent,size=pop),shape=16)+
+  ggtitle("fill with shape 16")+
+  theme(legend.position = "none")
+
+(shape_16|shape_21)/(shapef_16|shapef_21)
+```
+
+## Bar Charts and Violin Plots
+
+What I have written in this chunk may not work for you. You may have to do something along the lines of `bar=read.csv(file.choose())` and then select the `bar_plot.csv` from wherever you saved it on your computer. 
+
+The dataset we will be using is looking at how much sleep students in different years of school get (in minutes) at different times in the year. 
+
+### Bar Chart 
+
+More information on making bar charts can be found [here](http://www.sthda.com/english/wiki/ggplot2-barplots-quick-start-guide-r-software-and-data-visualization)
+
+
+```{r}
+bar=read.csv(here("data/bar_plot.csv"))
+head(bar)
+```
+
+There are a lot of ways you can display a bar chart. It's very easy to switch between them. 
+
+All of these will have `stat="summary"` and `fun.y="mean"` in the `geom_bar()`, this is how we can make sure we are plotting the means of each category. 
+
+### Grouped Bar Chart 
+
+```{r eval=FALSE}
+ggplot(bar, aes(x=,y=,fill=))+geom_bar(position="",stat = "summary", fun.y = "mean")
+```
+
+```{r}
+ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="dodge",stat = "summary", fun.y = "mean")
+```
+
+### Stacked Bar Chart 
+
+Changing the position will allow us to have different types of bar charts. To get it stacked, use `position="stack"`.
+
+```{r eval=FALSE}
+ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="")
+```
+
+```{r}
+ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="stack",stat = "summary", fun.y = "mean")
+```
+
+### Percent Bar Chart
+
+```{r eval=FALSE}
+ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar()
+```
+
+```{r}
+ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="fill",stat = "summary", fun.y = "mean")
+```
+
+To summarize: 
+
+* grouped bar chart: `position="dodge"`
+* stacked bar chart: `position="stack"`
+* percent bar chart: `position="fill"`
+
+### Box and Whisker Plot 
+
+Box and Whisket plots are considered an improvement over the barplot because they give a better idea of the spread of the data. You can see the mean, quartiles and outliers, these are not evident with the bar plot. 
+
+More information on making box and whisker plots can be found [here](http://www.sthda.com/english/wiki/ggplot2-box-plot-quick-start-guide-r-software-and-data-visualization)
+
+```{r eval=FALSE}
+ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_()
+```
+
+```{r}
+ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_boxplot()
+```
+
+### Violin Plot 
+
+Violin plots are sometimes considered anoter level up from the box and whisker (so to keep track bar<box<violin) since it gives a better (more visual) idea of how the points are distributed. 
+
+More information on violin plots can be found [here](http://www.sthda.com/english/wiki/ggplot2-violin-plot-quick-start-guide-r-software-and-data-visualization)
+
+```{r eval=FALSE}
+ggplot(bar, aes(x=,y=,="year"))+
+  geom_()
+```
+
+```{r}
+ggplot(bar, aes(x=time,y=minutes,fill=year))+
+  geom_violin()
+```
+
+You may have noticed that for all of these, the axis are in the order final, midterm, week2. While not a big deal, it would be nice if they were week2, midterm, final. We are going to get into how to change that later. For now, we will stick to the basic plots. 
+
+
+## Density Plots
+
+What I have written in this chunk may not work for you. You may have to do something along the lines of `density=read.csv(file.choose())` and then select the `density.csv` from wherever you saved it on your computer.
+
+More information on density plots can be found [here](https://plot.ly/ggplot2/geom_density/)
+
+This is a randomly generated dataset for the weights of males vs. females. 
+
+```{r}
+density=read.csv(here("data/denisty.csv"))
+head(density)
+```
+
+```{r eval=FALSE}
+ggplot(density, aes(x=,fill=)) + 
+  geom_()
+```
+
+```{r}
+ggplot(density, aes(x=weight,fill=sex)) + 
+  geom_density()
+```
+
+There is a large chunk of this figure that is overlapping. If we want to be able to see what is going on, we can change the alpha (or opaque the figures are)
+
+```{r eval=FALSE}
+ggplot(density, aes(x=weight,fill=sex)) + 
+  geom_density(=0.5)
+```
+
+```{r}
+ggplot(density, aes(x=weight,fill=sex)) + 
+  geom_density(alpha=0.5)
+```
+
+
+## Customizing your Plots
+
+This is the same plot we made above, we haven't added any customizations. 
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")
+```
+
+### Themes 
+
+There are a lot of different themes you can use when making your plots. You can see a description of them all [here](https://ggplot2.tidyverse.org/reference/ggtheme.html), and I'll show you some examples below.
+
+```{r eval=FALSE}
+ggplot(scatter,aes())+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  theme_()
+```
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  theme_bw()
+```
+
+```{r }
+scatter_bw=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  ggtitle(("theme_bw"))+
+  theme_bw()+
+  theme(legend.position = "none")
+scatter_light=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  ggtitle("theme_classic")+
+  theme_classic()+
+  theme(legend.position = "none")
+scatter_dark=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  ggtitle("theme_dark")+
+  theme_dark()+
+  theme(legend.position = "none")
+scatter_minimal=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  ggtitle("theme_minimal")+
+  theme_minimal()+
+  theme(legend.position = "none")
+```
+
+### Patchwork 
+
+![](patchwork.png)
+
+`Patchwork` is a lovely package that allows you to very simply arrange your plots in whatever manner you like. See the documentation [here](https://github.com/thomasp85/patchwork). You can see an example of how you would use it below. 
+
+```{r}
+(scatter_bw|scatter_light)/(scatter_dark|scatter_minimal)
+```
+
+```{r eval=FALSE}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  ggtitle("Removing All Gridlines")+
+  theme_bw()+
+  theme( = element_blank())
+```
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  ggtitle("Removing All Gridlines")+
+  theme_bw()+
+  theme(panel.grid = element_blank())
+```
+
+```{r eval=FALSE}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  ggtitle("Removing All Vertical Lines")+
+  theme_bw()+
+  theme(= element_blank(),
+       = element_blank())
+```
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  ggtitle("Removing All Vertical Lines")+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+### Modifying the legend 
+
+There are a lot of ways you can change the legend. You will probably need to do some research for your specific use case. There are options in `theme()` and options in `guide()` and a lot of others. 
+
+[This](http://www.cookbook-r.com/Graphs/Legends_(ggplot2)/) is normally where I go when I first start troubleshooting my legend problems. 
+
+```{r eval=FALSE}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  ("Renaming the Legends")+
+  guides(colour=guide_legend(),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  ggtitle("Renaming the Legends")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+
+### Colouring 
+
+Everybody's favourite part of plotting. There is A LOT of different ways you can colour your plots. So I advise you explore this when the time comes, but there are a lot of pre-set colour schemes that look great and are easy to implement. You can find resources on them [here](http://www.sthda.com/english/wiki/ggplot2-colors-how-to-change-colors-automatically-and-manually)
+
+```{r eval=FALSE}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_viridis_()+
+  ggtitle("Scatterplot with Viridis Colouring")+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=(title="Population"))+
+  theme_()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_viridis_d()+
+  ggtitle("Scatterplot with Viridis Colouring")+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+```{r eval=FALSE}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_brewer()+
+  ggtitle("Scatterplot with Colour Brewer")+
+  xlab(" GDP Per Capita")+
+ ("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  (panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_brewer(palette = "Paired")+
+  ggtitle("Scatterplot with Colour Brewer")+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+
+If you're going to get into manual colouring look [here](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf) to figure out what kind of colours are available. 
+
+```{r eval=FALSE}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale__manual(=c("orangered3","slateblue","lightseagreen","orchid3","sienna2"))+
+  ggtitle("Scatterplot with Manual Colours")+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_manual(values=c("orangered3","slateblue","lightseagreen","orchid3","sienna2"))+
+  ggtitle("Scatterplot with Manual Colours")+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+
+If you are hoping to apply a specific colour to a specific category you can do it like this. 
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_manual(values=c("Americas"="orangered3","Asia"="slateblue","Africa"="lightseagreen","Europe"="orchid3","Oceania"="sienna2"))+
+  ggtitle("Scatterplot with Manual Colours-Assigned to Continent")+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
+
+### Facets 
+
+
+Sometimes when you have a lot of data it can be useful to facet your plots. This is really easy! As you can see below. The different options for facets can be seen [here](https://www.datacamp.com/community/tutorials/facets-ggplot-r)
+
+```{r eval=FALSE}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_viridis_d()+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())+
+  facet_grid()
+```
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_viridis_d()+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())+
+  facet_grid(~continent)
+```
+
+You can see that the facet made our x-axis labels difficult to see. Luckily this is one of the many elements we can fix in `theme()`
+
+```{r eval=FALSE}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_viridis_d()+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+       = element_text(angle=45,vjust=0.5))+
+  facet_grid(~continent)
+```
+
+```{r}
+ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
+  geom_point(aes(colour=continent,size=pop))+
+  scale_colour_viridis_d()+
+  xlab(" GDP Per Capita")+
+  ylab("Life Expectancy")+
+  guides(colour=guide_legend(title="Continent"),size=guide_legend(title="Population"))+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.text.x = element_text(angle=45,vjust=0.5))+
+  facet_grid(~continent)
+```
+
+### Changing Factor Levels
+
+Remember up above we saw that the categories for the sleep dataset weren't in the right order. We are going to reset the [factor levels](http://www.cookbook-r.com/Manipulating_data/Changing_the_order_of_levels_of_a_factor/) and then it should plot properly. 
+
+```{r eval=FALSE}
+bar_ofl=ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="dodge",stat="identity")
+bar$time <- factor(bar$time,levels = c())
+bar_rfl=ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="dodge",stat="")
+(|)
+```
+
+```{r}
+bar_ofl=ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="dodge",stat="identity")
+bar$time <- factor(bar$time,levels = c("week2","midterm","final"))
+bar_rfl=ggplot(bar, aes(x=time,y=minutes,fill=year))+geom_bar(position="dodge",stat="identity")
+(bar_ofl|bar_rfl)
+```
+
+## Away from the Basics 
+
+We went through some very basics code today. But one of the things that makes ggplot so popular is how customizable it is. The following are 2 examples of plots that I have been using a lot in my research and work that may look very complicated but are really only building on the very basic structures we have gone over today. 
+
+### Phytoplankton Gene Isoform Counts Based on Cell Diameter and Taxa 
+
+This was done with Katherine Fleury for her undergraduate honours project at Mount Allison University. 
+
+
+```{r}
+merged_data_na=read.csv(here("data/my_example.csv"))
+merged_plot <- ggplot(merged_data_na,aes(x=Enzyme_Isoform,y=(Diameter),size= isoform_count,shape=ome, colour= taxa))+
+  geom_point()+
+  xlab("Gene Family")+
+  ylab("Diameter")+
+  scale_x_discrete(position ="top")+
+  scale_shape_manual(values = c(16, 18),"Data Type")+
+  scale_color_brewer(palette = "Paired")+
+  guides(size=guide_legend(title="Isoform Count"),
+         shape=guide_legend(override.aes = list(size=3)), 
+         colour=guide_legend(override.aes = list(size=3),(title = "Taxa")))+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text.y=element_text(face="italic",size=12),
+        axis.text.x=element_text(size=12,angle=90),
+        axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold"))+
+  facet_grid(~Enzyme_parent_ASA, scales = "free", space = "free")
+merged_plot
+```
+```{r echo = FALSE, message=FALSE}
+library(igraph)
+library(ggnetwork)
+network_df=read.csv(here("data/net.csv"))
+```
+
+
+### Network plot 
+
+You need a few other packages in order to get the data ready for this. You can see it in the Rmd version of this html (you can find it in the ReadMe). 
+
+
+```{r}
+ggplot(network_df,aes(x = x, y = y, xend = xend, yend = yend))+
+  geom_edges(arrow = arrow(length = unit(6, "pt")))+
+  geom_nodes(aes(colour=status),size=8)+
+  geom_text(aes(label=name), check_overlap = TRUE)+
+  scale_color_brewer(palette = "Accent")+
+  ggtitle("Disease Transmission")+
+  theme_blank()
+  
+
+```
+
+## Trouble shooting 
+
+* check the order of your layers 
+* check the class of the columns you are trying to use using `class()`
+* check the factor levels with `levels()`
+* to check how many of each category you have use `table(df$col)`
+
+

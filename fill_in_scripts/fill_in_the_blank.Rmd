@@ -5,6 +5,7 @@ output:
     df_print: paged
 ---
 
+
 This is going to be a basic overview of making your some basic plots in ggplot. We will cover 
 
 * Scatterplots 
@@ -302,6 +303,8 @@ scatter_minimal=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
 ```
 
 ### Patchwork 
+
+
 
 `Patchwork` is a lovely package that allows you to very simply arrange your plots in whatever manner you like. See the documentation [here](https://github.com/thomasp85/patchwork). You can see an example of how you would use it below. 
 
