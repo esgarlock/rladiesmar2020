@@ -20,7 +20,7 @@ Before you arrive at the workshop, please make sure you have downloaded R. It wi
 All these materials are in R notebook format, if you are not familiar with this format check [this](https://bookdown.org/yihui/rmarkdown/notebook.html) out. 
 
 * [Fill in the blank script](https://github.com/esgarlock/rladiesmar2020/blob/master/fill_in_scripts/fill_in_the_blank.Rmd)
-* [Completed Script](https://github.com/esgarlock/rladiesmar2020/blob/master/completed_scripts/ggplot_intro_besthits.Rmd)
+* [Completed Script](https://github.com/esgarlock/rladiesmar2020/blob/master/complete_scripts/ggplot_intro_besthits.html)
 * [Scatter plot data](https://github.com/esgarlock/rladiesmar2020/blob/master/data/scatter.csv)
 * [Bar plot data](https://github.com/esgarlock/rladiesmar2020/blob/master/data/bar_plot.csv)
 * [Density plot data](https://github.com/esgarlock/rladiesmar2020/blob/master/data/denisty.csv)
@@ -32,3 +32,10 @@ All these materials are in R notebook format, if you are not familiar with this 
 * [The R Graph Gallery](https://www.r-graph-gallery.com/)
 * [Top 50 ggplot2 Visualizations](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
 * [One dataset visualized 25 ways](https://flowingdata.com/2017/01/24/one-dataset-visualized-25-ways/)
+* Fun People to follow on twitter
+  + [RLadies Global](https://twitter.com/RLadiesGlobal)
+  + [RLadies Vancouver](https://twitter.com/RLadiesVan)
+  + [Hadley Wickham](https://twitter.com/hadleywickham)
+  + [Sharla Gelfand](https://twitter.com/sharlagelfand)
+  + [Laura Ellis](https://twitter.com/LittleMissData)
+ 
