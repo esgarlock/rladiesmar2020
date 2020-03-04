@@ -303,6 +303,8 @@ scatter_minimal=ggplot(scatter,aes(x=gdpPercap,y=lifeExp))+
 
 ### Patchwork 
 
+![](patchwork.png)
+
 `Patchwork` is a lovely package that allows you to very simply arrange your plots in whatever manner you like. See the documentation [here](https://github.com/thomasp85/patchwork). You can see an example of how you would use it below. 
 
 ```{r}
