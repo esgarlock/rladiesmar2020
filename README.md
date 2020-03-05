@@ -26,6 +26,7 @@ All these materials are in R notebook format, if you are not familiar with this 
 * [Density plot data](https://github.com/esgarlock/rladiesmar2020/blob/master/data/denisty.csv)
 * [Emma's example 1](https://github.com/esgarlock/rladiesmar2020/blob/master/data/my_example.csv)
 * [Emma's example 2](https://github.com/esgarlock/rladiesmar2020/blob/master/data/net.csv)
+* [Live Coding Dataset](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-02-18/food_consumption.csv) (If we have time) 
 
 
 ## Other Resources 
