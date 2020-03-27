@@ -46,5 +46,6 @@ All these materials are in R notebook format, if you are not familiar with this 
  * [R for Data Science Textbook](https://r4ds.had.co.nz/) 
  * [Intro To tidyverse by Jeff Oliver](https://jcoliver.github.io/learn-r/012-intro-tidyverse.html) 
  * [OHI Data Science Training Textbook](http://ohi-science.org/data-science-training/index.html)
+ * [COVID-19 Data analysis and visualization](https://78462f86-a-e2d7344e-s-sites.googlegroups.com/a/rdatamining.com/www/docs/Coronavirus-data-analysis-world.pdf?attachauth=ANoY7cp33H8W95UlP_k8H11DeLxXeHT3XgDA8cHUOQhtCfhFLy_65l0cZbS81GwZt5OwnZrPteZyG3L6qNOfMNXHS92fXu5iKNpDMpxFgqex8Ng35XfHl7A0VdBEwI3ggN-Xp8a-5ldNuAMfXqa6aR4TR7_e6uVvbvubarTgC7POxJoC0VHcZhnEAGtl8011OyIT4KpiozQag903_o2SDz5u7y9eNTZNnxMbWrDgSzGCS8Sfb8GT0lA%3D&attredirects=0)
  
  
