@@ -30,6 +30,7 @@ All these materials are in R notebook format, if you are not familiar with this 
 
 
 ## Other Resources 
+### Visualization 
 * [The R Graph Gallery](https://www.r-graph-gallery.com/)
 * [Top 50 ggplot2 Visualizations](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
 * [One dataset visualized 25 ways](https://flowingdata.com/2017/01/24/one-dataset-visualized-25-ways/)
@@ -39,4 +40,11 @@ All these materials are in R notebook format, if you are not familiar with this 
   + [Hadley Wickham](https://twitter.com/hadleywickham)
   + [Sharla Gelfand](https://twitter.com/sharlagelfand)
   + [Laura Ellis](https://twitter.com/LittleMissData)
+  
+ ### Data Wrangling and Tidying 
+ * [R Advent Calendar](https://drive.google.com/drive/folders/1eTu5QFSSGUeBjYrnyUnuXqRz8OXyFLy2) <- the very basics 
+ * [R for Data Science Textbook](https://r4ds.had.co.nz/) 
+ * [Intro To tidyverse by Jeff Oliver](https://jcoliver.github.io/learn-r/012-intro-tidyverse.html) 
+ * [OHI Data Science Training Textbook](http://ohi-science.org/data-science-training/index.html)
+ 
  
